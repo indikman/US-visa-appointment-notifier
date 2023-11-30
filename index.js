@@ -38,6 +38,13 @@ const notifyMe = async (earliestDate) => {
   })
 }
 
+const notifyReset = async(tries) => {
+  await sendEmail({
+    subject:`US Visa appointment checker stopped`,
+    text:`Hey I tried and stopped it. Please restart me.`
+  })
+}
+
 const checkForSchedules = async (page) => {
   logStep('checking for schedules');
   await page.setExtraHTTPHeaders({
@@ -75,7 +82,10 @@ const process = async (browser) => {
   logStep(`starting process with ${maxTries} tries left`);
 
   if(maxTries-- <= 0){
+
+    await notifyReset(maxTries);
     console.log('Reached Max tries')
+    
     return
   }
 
